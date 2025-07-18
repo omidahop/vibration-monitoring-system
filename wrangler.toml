@@ -12,12 +12,14 @@ name = "vibration-monitoring-staging"
 ENVIRONMENT = "production"
 JWT_SECRET = "your-super-secure-jwt-secret-key-here-change-this"
 
-
+# اتصال پایگاه داده (KV Namespace)
+[[kv_namespaces]]
 binding = "DB"
 database_name = "vibration-monitoring-db"
 database_id = ""
 
-
+# اتصال کش (KV Namespace)
+[[kv_namespaces]]
 binding = "CACHE"
 id = ""
 
@@ -26,14 +28,18 @@ command = "npm run build"
 cwd = "."
 watch_dir = ["public", "functions"]
 
-
+[triggers]
 pattern = "your-domain.com/*"
 zone_name = "your-domain.com"
 
-# Static assets
+# فایل‌های استاتیک
 [site]
 bucket = "./public"
 entry-point = "pages"
+
+# تنظیمات سازگاری
+[compatibility_flags]
+nodejs_compat = true
 
 # Compatibility flags
 [compatibility_flags]
