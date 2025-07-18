@@ -1,5 +1,5 @@
 name = "vibration-monitoring-system"
-main = "functions/index.js"
+main = "pages/index.js"  # تغییر داده شد
 compatibility_date = "2024-01-01"
 
 [env.production]
@@ -16,12 +16,11 @@ JWT_SECRET = "your-super-secure-jwt-secret-key-here-change-this"
 
 [[kv_namespaces]]
 binding = "DB"
-database_name = "vibration-monitoring-db"
-database_id = ""
+id = "your-database-id-here"  # اضافه شد
 
 [[kv_namespaces]]
 binding = "CACHE"
-id = ""
+id = "your-cache-id-here"  # اضافه شد
 
 [build]
 command = "npm run build"
@@ -34,4 +33,4 @@ zone_name = "your-domain.com"
 
 [site]
 bucket = "./public"
-entry-point = "pages"
+# entry-point حذف شد
