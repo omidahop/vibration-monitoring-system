@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ثبت‌نام - سیستم ثبت داده‌های ویبره</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/auth.css">
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>سیستم ثبت داده‌های ویبره</h1>
+                </div>
+                <p class="auth-subtitle">درخواست ثبت‌نام در سیستم</p>
+            </div>
+            
+            <div class="register-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">اطلاعات کاربری</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">اطلاعات شخصی</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">تایید نهایی</div>
+                </div>
+            </div>
+            
+            <form id="registerForm" class="auth-form">
+                <!-- Step 1: User Credentials -->
+                <div class="step-content active" data-step="1">
+                    <div class="form-group">
+                        <label class="form-label">نام کاربری:</label>
+                        <input type="text" id="username" class="form-control" required 
+                               placeholder="نام کاربری خود را انتخاب کنید"
+                               minlength="3" maxlength="20">
+                        <div class="input-feedback" id="usernameFeedback"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">رمز عبور:</label>
+                        <div class="password-input">
+                            <input type="password" id="password" class="form-control" required 
+                                   placeholder="رمز عبور قوی انتخاب کنید"
+                                   minlength="8">
+                            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <div class="strength-text">قدرت رمز عبور</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">تکرار رمز عبور:</label>
+                        <div class="password-input">
+                            <input type="password" id="confirmPassword" class="form-control" required 
+                                   placeholder="رمز عبور را دوباره وارد کنید">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="input-feedback" id="confirmPasswordFeedback"></div>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Personal Information -->
+                <div class="step-content" data-step="2">
+                    <div class="form-group">
+                        <label class="form-label">نام و نام خانوادگی:</label>
+                        <input type="text" id="fullName" class="form-control" required 
+                               placeholder="نام کامل خود را وارد کنید">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">سمت شغلی:</label>
+                        <select id="jobRole" class="form-control" required>
+                            <option value="">انتخاب سمت شغلی</option>
+                            <option value="اپراتور تجهیزات">اپراتور تجهیزات</option>
+                            <option value="تکنسین">تکنسین</option>
+                            <option value="مهندس">مهندس</option>
+                            <option value="سرپرست تجهیزات">سرپرست تجهیزات</option>
+                            <option value="سرپرست فنی">سرپرست فنی</option>
+                            <option value="مدیر تولید">مدیر تولید</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">کد پرسنلی:</label>
+                        <input type="text" id="employeeId" class="form-control" 
+                               placeholder="کد پرسنلی (اختیاری)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">شیف کاری:</label>
+                        <select id="workShift" class="form-control">
+                            <option value="">انتخاب شیف</option>
+                            <option value="صبح">صبح (6:30 - 14:30)</option>
+                            <option value="عصر">عصر (14:30 - 22:30)</option>
+                            <option value="شب">شب (22:30 - 6:30)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Confirmation -->
+                <div class="step-content" data-step="3">
+                    <div class="confirmation-info">
+                        <h3>تایید اطلاعات</h3>
+                        <div class="info-summary">
+                            <div class="info-item">
+                                <span class="info-label">نام کاربری:</span>
+                                <span class="info-value" id="summaryUsername"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">نام کامل:</span>
+                                <span class="info-value" id="summaryFullName"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">سمت شغلی:</span>
+                                <span class="info-value" id="summaryJobRole"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">شیف کاری:</span>
+                                <span class="info-value" id="summaryWorkShift"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="agreeTerms" required>
+                            <span class="checkmark"></span>
+                            با قوانین و مقررات سیستم موافقم
+                        </label>
+                    </div>
+                    
+                    <div class="alert alert-info" style="background: rgba(99, 102, 241, 0.1); border: 1px solid var(--info-color); color: var(--info-color); padding: var(--spacing-md); border-radius: var(--radius-lg); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                        <i class="fas fa-info-circle"></i>
+                        <p style="margin: 0; font-size: 0.9rem;">درخواست شما پس از بررسی توسط مدیر سیستم تایید خواهد شد.</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons -->
+                <div class="step-navigation">
+                    <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeStep(-1)">
+                        <i class="fas fa-arrow-right"></i>
+                        قبلی
+                    </button>
+                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                        بعدی
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <button type="submit" class="btn btn-success d-none" id="submitBtn">
+                        <i class="fas fa-check"></i>
+                        ثبت درخواست
+                    </button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>قبلاً ثبت‌نام کرده‌اید؟ 
+                    <a href="login.html" class="auth-link">ورود به سیستم</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/auth.js"></script>
+    <script src="../js/register.js"></script>
+</body>
+</html>

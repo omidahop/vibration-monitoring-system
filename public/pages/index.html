@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم ثبت داده‌های ویبره تجهیزات</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    سیستم ثبت داده‌های ویبره
+                </div>
+                
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" onclick="showSection('data-entry')">
+                        <i class="fas fa-edit"></i>
+                        ثبت داده
+                    </button>
+                    <button class="nav-tab" onclick="showSection('view-data')">
+                        <i class="fas fa-table"></i>
+                        مشاهده داده‌ها
+                    </button>
+                    <button class="nav-tab" onclick="showSection('charts')">
+                        <i class="fas fa-chart-area"></i>
+                        نمودار
+                    </button>
+                    <button class="nav-tab" onclick="showSection('analysis')">
+                        <i class="fas fa-search"></i>
+                        آنالیز
+                    </button>
+                    <button class="nav-tab" onclick="showSection('slideshow')">
+                        <i class="fas fa-play"></i>
+                        اسلایدشو
+                    </button>
+                    <button class="nav-tab" onclick="showSection('database')">
+                        <i class="fas fa-database"></i>
+                        دیتابیس
+                    </button>
+                    <button class="nav-tab admin-only" onclick="showSection('admin-panel')" style="display: none;">
+                        <i class="fas fa-users-cog"></i>
+                        پنل مدیریت
+                    </button>
+                    <button class="nav-tab" onclick="showSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        تنظیمات
+                    </button>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="authManager.logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        خروج
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- Admin Panel Section -->
+            <section id="admin-panel" class="section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-users-cog"></i>
+                            پنل مدیریت
+                        </h2>
+                    </div>
+                    
+                    <!-- Admin Stats -->
+                    <div class="grid grid-4 mb-3">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="pendingUsersCount">0</div>
+                                <div class="stat-label">کاربران در انتظار</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="activeUsersCount">0</div>
+                                <div class="stat-label">کاربران فعال</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="todayDataCount">0</div>
+                                <div class="stat-label">داده‌های امروز</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="alertsCount">0</div>
+                                <div class="stat-label">هشدارها</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Admin Tabs -->
+                    <div class="admin-tabs">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" onclick="showAdminTab('pending-users')">
+                                <i class="fas fa-user-clock"></i>
+                                کاربران در انتظار
+                                <span class="badge" id="pendingBadge">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="showAdminTab('all-users')">
+                                <i class="fas fa-users"></i>
+                                همه کاربران
+                            </button>
+                            <button class="tab-btn" onclick="showAdminTab('audit-logs')">
+                                <i class="fas fa-history"></i>
+                                تاریخچه فعالیت‌ها
+                            </button>
+                            <button class="tab-btn" onclick="showAdminTab('system-health')">
+                                <i class="fas fa-heartbeat"></i>
+                                سلامت سیستم
+                            </button>
+                        </div>
+                        
+                        <!-- Pending Users Tab -->
+                        <div class="tab-content active" id="pending-users-tab">
+                            <div class="pending-users-container">
+                                <div class="pending-users-header">
+                                    <h3>درخواست‌های ثبت‌نام</h3>
+                                    <button class="btn btn-primary" onclick="refreshPendingUsers()">
+                                        <i class="fas fa-sync"></i>
+                                        بروزرسانی
+                                    </button>
+                                </div>
+                                
+                                <div class="pending-users-list" id="pendingUsersList">
+                                    <div class="loading-state">
+                                        <div class="loading-spinner"></div>
+                                        <p>در حال بارگذاری...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Other tabs can be added here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Data Entry Section -->
+            <section id="data-entry" class="section active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-edit"></i>
+                            ثبت داده‌های ویبره
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش ثبت داده‌ها در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View Data Section -->
+            <section id="view-data" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-table"></i>
+                            مشاهده داده‌ها
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش مشاهده داده‌ها در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section id="charts" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-chart-area"></i>
+                            نمودارها
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش نمودارها در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analysis Section -->
+            <section id="analysis" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-search"></i>
+                            آنالیز افزایش‌های غیرعادی
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش آنالیز در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slideshow Section -->
+            <section id="slideshow" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-play"></i>
+                            اسلایدشو داده‌ها
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش اسلایدشو در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Database Section -->
+            <section id="database" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-database"></i>
+                            مدیریت دیتابیس
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش مدیریت دیتابیس در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-cog"></i>
+                            تنظیمات
+                        </h2>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>بخش تنظیمات در حال توسعه می‌باشد...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/admin.js"></script>
+    <script src="../js/app.js"></script>
+</body>
+</html>

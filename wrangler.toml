@@ -1,0 +1,40 @@
+name = "vibration-monitoring-system"
+main = "functions/index.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+name = "vibration-monitoring"
+
+[env.staging]
+name = "vibration-monitoring-staging"
+
+[vars]
+ENVIRONMENT = "production"
+JWT_SECRET = "your-super-secure-jwt-secret-key-here-change-this"
+
+
+binding = "DB"
+database_name = "vibration-monitoring-db"
+database_id = ""
+
+
+binding = "CACHE"
+id = ""
+
+[build]
+command = "npm run build"
+cwd = "."
+watch_dir = ["public", "functions"]
+
+
+pattern = "your-domain.com/*"
+zone_name = "your-domain.com"
+
+# Static assets
+[site]
+bucket = "./public"
+entry-point = "pages"
+
+# Compatibility flags
+[compatibility_flags]
+nodejs_compat = true
