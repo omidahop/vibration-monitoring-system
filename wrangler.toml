@@ -4,21 +4,21 @@ compatibility_date = "2024-01-01"
 
 [env.production]
 name = "vibration-monitoring"
+compatibility_flags = { nodejs_compat = true }
 
 [env.staging]
 name = "vibration-monitoring-staging"
+compatibility_flags = { nodejs_compat = true }
 
 [vars]
 ENVIRONMENT = "production"
 JWT_SECRET = "your-super-secure-jwt-secret-key-here-change-this"
 
-# اتصال پایگاه داده (KV Namespace)
 [[kv_namespaces]]
 binding = "DB"
 database_name = "vibration-monitoring-db"
 database_id = ""
 
-# اتصال کش (KV Namespace)
 [[kv_namespaces]]
 binding = "CACHE"
 id = ""
@@ -32,15 +32,6 @@ watch_dir = ["public", "functions"]
 pattern = "your-domain.com/*"
 zone_name = "your-domain.com"
 
-# فایل‌های استاتیک
 [site]
 bucket = "./public"
 entry-point = "pages"
-
-# تنظیمات سازگاری
-[compatibility_flags]
-nodejs_compat = true
-
-# Compatibility flags
-[compatibility_flags]
-nodejs_compat = true
